@@ -28,7 +28,7 @@ public class MyPApplet extends PApplet{
 		image(img, 0, 0);			//display image 
 		int[] color = sunColorSec(second());		//calculate color code for sun
 		fill(color[0],color[1],color[2]);	//set sun color
-		ellipse(width/4,height/5,width/4,height/5);	//draw sun
+		ellipse(width/4,height/5,height/5,height/5);	//draw sun
 		
 	}
 	

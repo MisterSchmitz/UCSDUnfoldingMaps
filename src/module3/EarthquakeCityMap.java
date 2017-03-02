@@ -16,6 +16,7 @@ import de.fhpotsdam.unfolding.data.PointFeature;
 import de.fhpotsdam.unfolding.marker.SimplePointMarker;
 import de.fhpotsdam.unfolding.providers.Google;
 import de.fhpotsdam.unfolding.providers.MBTilesMapProvider;
+import de.fhpotsdam.unfolding.providers.OpenStreetMap;
 import de.fhpotsdam.unfolding.utils.MapUtils;
 
 //Parsing library
@@ -47,18 +48,18 @@ public class EarthquakeCityMap extends PApplet {
 	private UnfoldingMap map;
 	
 	//feed with magnitude 2.5+ Earthquakes
-	private String earthquakesURL = "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.atom";
+	private String earthquakesURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.atom";
 
 	
 	public void setup() {
-		size(950, 600, OPENGL);
+		size(1110, 600, OPENGL);
 
 		if (offline) {
-		    map = new UnfoldingMap(this, 200, 50, 700, 500, new MBTilesMapProvider(mbTilesString));
+		    map = new UnfoldingMap(this, 210, 50, 880, 500, new MBTilesMapProvider(mbTilesString));
 		    earthquakesURL = "2.5_week.atom"; 	// Same feed, saved Aug 7, 2015, for working offline
 		}
 		else {
-			map = new UnfoldingMap(this, 200, 50, 700, 500, new Google.GoogleMapProvider());
+			map = new UnfoldingMap(this, 210, 50, 880, 500, new OpenStreetMap.OpenStreetMapProvider());
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
 			//earthquakesURL = "2.5_week.atom";
 		}
@@ -73,21 +74,35 @@ public class EarthquakeCityMap extends PApplet {
 	    //PointFeatures have a getLocation method
 	    List<PointFeature> earthquakes = ParseFeed.parseEarthquake(this, earthquakesURL);
 	    
-	    // These print statements show you (1) all of the relevant properties 
-	    // in the features, and (2) how to get one property and use it
 	    if (earthquakes.size() > 0) {
 	    	PointFeature f = earthquakes.get(0);
+		    // (1) all of the relevant properties in the features
 	    	System.out.println(f.getProperties());
-	    	Object magObj = f.getProperty("magnitude");
-	    	float mag = Float.parseFloat(magObj.toString());
+		    // (2) how to get one property and use it
+//	    	Object magObj = f.getProperty("magnitude");
+//	    	float mag = Float.parseFloat(magObj.toString());
 	    	// PointFeatures also have a getLocation method
 	    }
-	    
-	    // Here is an example of how to use Processing's color method to generate 
-	    // an int that represents the color yellow.  
-	    int yellow = color(255, 255, 0);
-	    
-	    //TODO: Add code here as appropriate
+
+	    //Create markers for each earthquake, and set properties based on earthquake magnitude
+	    for (PointFeature eq: earthquakes) {
+	    	SimplePointMarker newMarker = new SimplePointMarker(eq.getLocation(), eq.getProperties());
+	    	Object magObj = eq.getProperty("magnitude");
+	    	float mag = Float.parseFloat(magObj.toString());
+	    	if (mag > 5.0) {
+	    		newMarker.setColor(color(255, 0, 0)); // Red
+	    		newMarker.setRadius(20);
+	    	} else if (mag > 4.0) {
+	    		newMarker.setColor(color(255, 255, 0));	// Yellow
+	    		newMarker.setRadius(10);
+	    	} else {
+	    		newMarker.setColor(color(0, 0, 255)); // Blue
+	    		newMarker.setRadius(5);
+	    	}
+
+	    	markers.add(newMarker);
+	    }
+	    map.addMarkers(markers);
 	}
 		
 	// A suggested helper method that takes in an earthquake feature and 
@@ -111,6 +126,38 @@ public class EarthquakeCityMap extends PApplet {
 	private void addKey() 
 	{	
 		// Remember you can use Processing's graphics methods here
-	
+		int keyX = 20;
+		int keyY = 50;
+		int keyWidth = 170;
+		int keyHeight = 180;
+		int margin = 25;
+		int spacingY = 50;
+
+		// Symbols
+		fill(255, 255, 255); // White
+		rect(keyX, keyY, keyWidth, keyHeight);
+		
+		fill(255, 0, 0); // Red
+		ellipse(keyX+margin, keyY+margin*2, 20, 20);
+
+		fill(255, 255, 0); // Yellow
+		ellipse(keyX+margin, keyY+margin*2+spacingY*1, 10, 10);
+		
+		fill(0, 0, 255); // Blue
+		ellipse(keyX+margin, keyY+margin*2+spacingY*2, 5, 5);
+		
+		// Labels
+		fill(0);
+		textSize(12);
+		textAlign(LEFT);
+		text("Magnitude > 5.0", keyX+margin*2, 5+keyY+margin*2);
+		text("Magnitude > 4.0", keyX+margin*2, 5+keyY+margin*2+spacingY*1);
+		text("Magnitude < 4.0", keyX+margin*2, 5+keyY+margin*2+spacingY*2);
+
+		// Title
+		fill(0);
+		textSize(16);
+		textAlign(CENTER);
+		text("KEY", keyX+(keyWidth/2), keyY+margin);
 	}
 }

@@ -56,8 +56,8 @@ public class EarthquakeCityMapDemo extends PApplet {
 		size(950, 600, OPENGL);
 
 		// Assume online
-		map = new UnfoldingMap(this, 200, 50, 700, 500, new Google.GoogleMapProvider());
-//		map = new UnfoldingMap(this, 200, 50, 700, 500, new OpenStreetMap.OpenStreetMapProvider() );
+//		map = new UnfoldingMap(this, 200, 50, 700, 500, new Google.GoogleMapProvider());
+		map = new UnfoldingMap(this, 200, 50, 700, 500, new OpenStreetMap.OpenStreetMapProvider() );
 //	    map = new UnfoldingMap(this, 200, 50, 650, 600, new MBTilesMapProvider(mbTilesString));
 
 	    map.zoomToLevel(1);
@@ -130,48 +130,48 @@ public class EarthquakeCityMapDemo extends PApplet {
 	    bigEarthquakes.add(sumatraEq);
 	    bigEarthquakes.add(japanEq);
 	    bigEarthquakes.add(kamchatkaEq);
-//	    
+	    
 	    List<Marker> markers = new ArrayList<Marker>();
 	    for (PointFeature eq: bigEarthquakes) {
 	    	markers.add(new SimplePointMarker(eq.getLocation(), eq.getProperties()));
 	    }
 	    map.addMarkers(markers);
-//	    
-//	    
-//	    // STAGE 4: format markers on whether "historical" or "recent"
-//	    // Here is an example of how to use Processing's color method to generate 
-//	    // an int that represents the color yellow.  
-	    int yellow = color(255, 255, 0);
-	    int gray = color(150,150,150);
 	    
-	    for (Marker mk :markers) {
-	    	if ( (int) mk.getProperty("year") > 2000 ) {
-	    		mk.setColor(yellow);
-	    	}
-	    	else {
-	    		mk.setColor(gray);
-	    	}
-	    }
+	    
+	    // STAGE 4: format markers on whether "historical" or "recent"
+	    // Here is an example of how to use Processing's color method to generate 
+	    // an int that represents the color yellow.  
+//	    int yellow = color(255, 255, 0);
+//	    int gray = color(150,150,150);
 //	    
+//	    for (Marker mk :markers) {
+//	    	if ( (int) mk.getProperty("year") > 2000 ) {
+//	    		mk.setColor(yellow);
+//	    	}
+//	    	else {
+//	    		mk.setColor(gray);
+//	    	}
+//	    }
 	    
-	    //List<Marker> markers = new ArrayList<Marker>();
 	    
-	    // The List you will populate with new SimplePointMarkers
-	    //List<Marker> markers = new ArrayList<Marker>();
+//	    List<Marker> markers = new ArrayList<Marker>();
+	    
+//	    The List you will populate with new SimplePointMarkers
+//	    List<Marker> markers = new ArrayList<Marker>();
 
 	    //Use provided parser to collect properties for each earthquake
 	    //PointFeatures have a getLocation method
-	    //List<PointFeature> earthquakes = ParseFeed.parseEarthquake(this, earthquakesURL);
+	    List<PointFeature> earthquakes = ParseFeed.parseEarthquake(this, earthquakesURL);
 	    
 	    // These print statements show you (1) all of the relevant properties 
 	    // in the features, and (2) how to get one property and use it
-	    //if (earthquakes.size() > 0) {
-	    //	PointFeature f = earthquakes.get(0);
-	    //	System.out.println(f.getProperties());
-	    //	Object magObj = f.getProperty("magnitude");
-	    //	float mag = Float.parseFloat(magObj.toString());
+	    if (earthquakes.size() > 0) {
+	    	PointFeature f = earthquakes.get(0);
+	    	System.out.println(f.getProperties());
+	    	Object magObj = f.getProperty("magnitude");
+	    	float mag = Float.parseFloat(magObj.toString());
 	    	// PointFeatures also have a getLocation method
-	    //}
+	    }
 	    
 
 
@@ -187,7 +187,7 @@ public class EarthquakeCityMapDemo extends PApplet {
 	}
 	
 	public void draw() {
-	    background(10);
+	    background(220);
 	    map.draw();
 	    addKey();
 	}
