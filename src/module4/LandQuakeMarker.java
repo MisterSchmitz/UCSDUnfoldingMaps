@@ -11,9 +11,7 @@ import processing.core.PGraphics;
  */
 public class LandQuakeMarker extends EarthquakeMarker {
 	
-	
 	public LandQuakeMarker(PointFeature quake) {
-		
 		// calling EarthquakeMarker constructor
 		super(quake);
 		
@@ -33,7 +31,14 @@ public class LandQuakeMarker extends EarthquakeMarker {
 		// and how it is set in the EarthquakeMarker constructor
 		
 		// TODO: Implement this method
+		pg.ellipse(x,y,2*this.getRadius(),2*this.getRadius());
 		
+		// If earthquake occurred in past day, add an X through the marker:
+		String age = (String) getProperty("age"); 
+		if ( age.equals("Past Day") ) {
+			pg.line(x-this.getRadius(), y-this.getRadius(), x+this.getRadius(), y+this.getRadius());
+			pg.line(x-this.getRadius(), y+this.getRadius(), x+this.getRadius(), y-this.getRadius());
+		}
 	}
 	
 

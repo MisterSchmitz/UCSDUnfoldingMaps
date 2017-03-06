@@ -12,6 +12,7 @@ import processing.core.PGraphics;
 public class OceanQuakeMarker extends EarthquakeMarker {
 	
 	public OceanQuakeMarker(PointFeature quake) {
+		// calling EarthquakeMarker constructor
 		super(quake);
 		
 		// setting field in earthquake marker
@@ -30,11 +31,14 @@ public class OceanQuakeMarker extends EarthquakeMarker {
 		// and how it is set in the EarthquakeMarker constructor
 		
 		// TODO: Implement this method
+		pg.rect(x-this.getRadius(),y-this.getRadius(),2*this.getRadius(),2*this.getRadius());
 		
+		// If earthquake occurred in past day, add an X through the marker:
+		String age = (String) getProperty("age"); 
+		if ( age.equals("Past Day") ) {
+			pg.line(x-this.getRadius(), y-this.getRadius(), x+this.getRadius(), y+this.getRadius());
+			pg.line(x-this.getRadius(), y+this.getRadius(), x+this.getRadius(), y-this.getRadius());
+		}
 	}
-	
-
-
-	
 
 }

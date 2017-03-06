@@ -35,7 +35,7 @@ public class EarthquakeCityMap extends PApplet {
 	private static final long serialVersionUID = 1L;
 
 	// IF YOU ARE WORKING OFFILINE, change the value of this variable to true
-	private static final boolean offline = false;
+	private static final boolean offline = true;
 	
 	/** This is where to find the local tiles, for working without an Internet connection */
 	public static String mbTilesString = "blankLight-1-3.mbtiles";
@@ -76,11 +76,11 @@ public class EarthquakeCityMap extends PApplet {
 		
 		// FOR TESTING: Set earthquakesURL to be one of the testing files by uncommenting
 		// one of the lines below.  This will work whether you are online or offline
-		//earthquakesURL = "test1.atom";
-		//earthquakesURL = "test2.atom";
+		// earthquakesURL = "test1.atom";
+		// earthquakesURL = "test2.atom";
 		
 		// WHEN TAKING THIS QUIZ: Uncomment the next line
-		//earthquakesURL = "quiz1.atom";
+		earthquakesURL = "quiz1.atom";
 		
 		
 		// (2) Reading in earthquake data and geometric properties
@@ -165,7 +165,11 @@ public class EarthquakeCityMap extends PApplet {
 		// IMPLEMENT THIS: loop over all countries to check if location is in any of them
 		
 		// TODO: Implement this method using the helper method isInCountry
-		
+		for (Marker country : countryMarkers) {
+			if(isInCountry(earthquake, country)){
+				return true;
+			}
+		}
 		// not inside any country
 		return false;
 	}
@@ -178,7 +182,26 @@ public class EarthquakeCityMap extends PApplet {
 	// And LandQuakeMarkers have a "country" property set.
 	private void printQuakes() 
 	{
+		List<PointFeature> earthquakes = ParseFeed.parseEarthquake(this, earthquakesURL);
 		// TODO: Implement this method
+		int oceanQuakeCount = 0;
+		for (Marker country : countryMarkers) {
+			int quakeCount = 0;
+			for (PointFeature earthquake : earthquakes) {
+				if(isInCountry(earthquake, country)){
+					quakeCount++;
+				}
+			}
+			if(quakeCount>0) {
+				System.out.println(country.getProperty("name")+": "+quakeCount);
+			} 
+		}
+		for (PointFeature quake : earthquakes) {
+			if(!isLand(quake)) {
+				oceanQuakeCount++;
+			}
+		}		
+		System.out.println("OCEAN QUAKES: "+oceanQuakeCount);
 	}
 	
 	

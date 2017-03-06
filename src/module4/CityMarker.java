@@ -16,7 +16,7 @@ public class CityMarker extends SimplePointMarker {
 	
 	// The size of the triangle marker
 	// It's a good idea to use this variable in your draw method
-	public static final int TRI_SIZE = 5;  
+	public static final float TRI_SIZE = 5;  
 	
 	public CityMarker(Location location) {
 		super(location);
@@ -43,6 +43,8 @@ public class CityMarker extends SimplePointMarker {
 		pg.pushStyle();
 		
 		// TODO: Add code to draw a triangle to represent the CityMarker
+		pg.fill(pg.color(255,0,0));
+		pg.triangle(x-(float)0.866*TRI_SIZE, y+(float)0.5*TRI_SIZE, x+(float)0.866*TRI_SIZE, y+(float)0.5*TRI_SIZE, x, y-TRI_SIZE);
 		
 		// Restore previous drawing style
 		pg.popStyle();
