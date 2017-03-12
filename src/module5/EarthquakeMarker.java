@@ -1,7 +1,12 @@
 package module5;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import de.fhpotsdam.unfolding.data.Feature;
 import de.fhpotsdam.unfolding.data.PointFeature;
 import processing.core.PGraphics;
+import de.fhpotsdam.unfolding.marker.Marker;
 
 /** Implements a visual marker for earthquakes on an earthquake map
  * 
@@ -93,8 +98,15 @@ public abstract class EarthquakeMarker extends CommonMarker
 	@Override
 	public void showTitle(PGraphics pg, float x, float y)
 	{
-		// TODO: Implement this method
+		String title = getTitle();
+
+		// Draw a Rect Box
+		pg.fill(255, 250, 206);
+		pg.rect(x+this.radius+1, y, pg.textWidth(title)+3, 16);
 		
+		// Draw Text in a Rect Box
+		pg.fill(0);
+		pg.text(title, x+this.radius+2, y, pg.textWidth(title)+2, 16);
 	}
 
 	
@@ -110,6 +122,21 @@ public abstract class EarthquakeMarker extends CommonMarker
 		double km = (miles * kmPerMile);
 		return km;
 	}
+	
+//	public List<Marker> getImpactedCities(ArrayList<Marker> cityMarkers) {
+//		List<Marker> impactedCities;
+//		impactedCities = new ArrayList<Marker>();
+//		
+//		double threatRadius = this.threatCircle();
+//
+//		for (Marker marker : cityMarkers) {
+//			if (marker.getDistanceTo(this.getLocation()) <= threatRadius) {
+//				impactedCities.add(marker);
+//			}
+//		}
+//
+//		return impactedCities;
+//	}
 	
 	// determine color of marker from depth
 	// We use: Deep = red, intermediate = blue, shallow = yellow

@@ -35,7 +35,7 @@ public class EarthquakeCityMap extends PApplet {
 	private static final long serialVersionUID = 1L;
 
 	// IF YOU ARE WORKING OFFILINE, change the value of this variable to true
-	private static final boolean offline = false;
+	private static final boolean offline = true;
 	
 	/** This is where to find the local tiles, for working without an Internet connection */
 	public static String mbTilesString = "blankLight-1-3.mbtiles";
@@ -144,8 +144,19 @@ public class EarthquakeCityMap extends PApplet {
 	// Make sure you do not select two markers.
 	// 
 	private void selectMarkerIfHover(List<Marker> markers)
-	{
-		// TODO: Implement this method
+	{	
+		// Find marker where the mouse's x and y coordinates fall within
+		for (Marker marker : markers) {
+			if (lastSelected == null && marker.isInside(map, mouseX, mouseY)) {
+				// Set the marker as selected
+				marker.setSelected(true);
+				// Update lastSelected with the found CommonMarker object
+				lastSelected = (CommonMarker) marker;
+			} else {
+				marker.setSelected(false);
+			}
+		}
+		return;
 	}
 	
 	/** The event handler for mouse clicks
@@ -155,12 +166,73 @@ public class EarthquakeCityMap extends PApplet {
 	 */
 	@Override
 	public void mouseClicked()
-	{
-		// TODO: Implement this method
-		// Hint: You probably want a helper method or two to keep this code
-		// from getting too long/disorganized
+	{	
+		// If lastClicked is not null, then de-select whichever marker was clicked on previously, and set it to null
+		if (lastClicked != null) {
+			// Display all markers
+			unhideMarkers();
+			lastClicked.setClicked(false);
+			lastClicked = null;
+			return;
+		}
+		
+		if (lastClicked == null) {
+			// Check if click was a cityMarker
+			for (Marker marker : cityMarkers) {
+				if (marker.isInside(map, mouseX, mouseY)) {
+					lastClicked = (CommonMarker) marker;
+					lastClicked.setClicked(true);
+					clickedCityMarker(lastClicked);
+				} else {
+					marker.setHidden(true);
+				}
+			}
+		}
+	
+		if (lastClicked == null) {
+			// Check if click was a quakeMarker
+			for (Marker marker : quakeMarkers) {
+				if (marker.isInside(map, mouseX, mouseY)) {
+					lastClicked = (CommonMarker) marker;
+					lastClicked.setClicked(true);
+					clickedQuakeMarker(lastClicked);
+				} else {
+					marker.setHidden(true);
+				}
+			}		
+		}
+		
+		// If lastClicked is still null, show all markers
+		if (lastClicked == null) {
+			unhideMarkers();
+		}
 	}
 	
+	private void clickedCityMarker(Marker clickedCityMarker) {
+		// Find all earthquakes whose threat circle contains this city, and setHidden to false
+		for (Marker marker : quakeMarkers) {
+			EarthquakeMarker quakeMarker = (EarthquakeMarker) marker;
+			double threatRadius = quakeMarker.threatCircle();
+			if (marker.getDistanceTo(clickedCityMarker.getLocation()) <= threatRadius) {
+				marker.setHidden(false);
+//				System.out.println(marker);
+			} else {
+				marker.setHidden(true);
+			}
+		}
+	}
+
+	private void clickedQuakeMarker(Marker clickedQuakeMarker) {
+		EarthquakeMarker quakeMarker = (EarthquakeMarker) clickedQuakeMarker;
+		double threatRadius = quakeMarker.threatCircle();
+		// Find all cities which fall within this quake's threat circle, and setHidden to false
+		for (Marker marker : cityMarkers) {
+			if (marker.getDistanceTo(quakeMarker.getLocation()) <= threatRadius) {
+				marker.setHidden(false);
+//				System.out.println(marker);
+			}
+		}
+	}
 	
 	// loop over and unhide all markers
 	private void unhideMarkers() {
