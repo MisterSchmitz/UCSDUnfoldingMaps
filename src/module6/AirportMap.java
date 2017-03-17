@@ -23,12 +23,15 @@ import processing.core.PApplet;
  */
 public class AirportMap extends PApplet {
 	
-	UnfoldingMap map;
+	private UnfoldingMap map;
 	private List<Marker> airportList;
 	List<Marker> routeList;
 	
+	private CommonMarker lastSelected;
+	private CommonMarker lastClicked;
+	
 	public void setup() {
-		// setting up PAppler
+		// setting up PApplet
 		size(800,600, OPENGL);
 		
 		// setting up map and default events
@@ -75,13 +78,13 @@ public class AirportMap extends PApplet {
 			System.out.println(sl.getProperties());
 			
 			//UNCOMMENT IF YOU WANT TO SEE ALL ROUTES
-			//routeList.add(sl);
+//			routeList.add(sl);
 		}
 		
 		
 		
 		//UNCOMMENT IF YOU WANT TO SEE ALL ROUTES
-		//map.addMarkers(routeList);
+//		map.addMarkers(routeList);
 		
 		map.addMarkers(airportList);
 		
@@ -91,6 +94,41 @@ public class AirportMap extends PApplet {
 		background(0);
 		map.draw();
 		
+	}
+	
+	/** Event handler that gets called automatically when the 
+	 * mouse moves.
+	 */
+	@Override
+	public void mouseMoved()
+	{
+		// clear the last selection
+		if (lastSelected != null) {
+			lastSelected.setSelected(false);
+			lastSelected = null;
+		
+		}
+		selectMarkerIfHover(airportList);
+		//loop();
+	}
+	
+	// If there is a marker selected 
+	private void selectMarkerIfHover(List<Marker> markers)
+	{
+		// Abort if there's already a marker selected
+		if (lastSelected != null) {
+			return;
+		}
+		
+		for (Marker m : markers) 
+		{
+			CommonMarker marker = (CommonMarker)m;
+			if (marker.isInside(map,  mouseX, mouseY)) {
+				lastSelected = marker;
+				marker.setSelected(true);
+				return;
+			}
+		}
 	}
 	
 
