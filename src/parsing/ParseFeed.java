@@ -162,6 +162,7 @@ public class ParseFeed {
 			point.setId(columns[0]);
 			
 			// get other fields from csv
+//			point.addProperty("uid", columns[0]);
 			point.addProperty("name", columns[1]);
 			point.putProperty("city", columns[2]);
 			point.putProperty("country", columns[3]);

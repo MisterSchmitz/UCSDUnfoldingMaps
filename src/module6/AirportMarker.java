@@ -35,6 +35,7 @@ public class AirportMarker extends CommonMarker {
 	public void showTitle(PGraphics pg, float x, float y) {
 
 			String name = getName();
+			String code = getCode();
 			pg.pushStyle();
 			
 			pg.rectMode(PConstants.CORNER);
