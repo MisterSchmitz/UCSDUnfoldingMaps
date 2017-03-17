@@ -14,6 +14,7 @@ import de.fhpotsdam.unfolding.marker.Marker;
 import de.fhpotsdam.unfolding.marker.MultiMarker;
 import de.fhpotsdam.unfolding.providers.Google;
 import de.fhpotsdam.unfolding.providers.MBTilesMapProvider;
+import de.fhpotsdam.unfolding.providers.OpenStreetMap;
 import de.fhpotsdam.unfolding.utils.MapUtils;
 import parsing.ParseFeed;
 import processing.core.PApplet;
@@ -44,7 +45,7 @@ public class EarthquakeCityMap extends PApplet {
 	
 
 	//feed with magnitude 2.5+ Earthquakes
-	private String earthquakesURL = "http://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.atom";
+	private String earthquakesURL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_week.atom";
 	
 	// The files containing city names and info and country names and info
 	private String cityFile = "city-data.json";
@@ -73,7 +74,7 @@ public class EarthquakeCityMap extends PApplet {
 		    earthquakesURL = "2.5_week.atom";  // The same feed, but saved August 7, 2015
 		}
 		else {
-			map = new UnfoldingMap(this, 200, 50, 650, 600, new Google.GoogleMapProvider());
+			map = new UnfoldingMap(this, 200, 50, 650, 600, new OpenStreetMap.OpenStreetMapProvider());
 			// IF YOU WANT TO TEST WITH A LOCAL FILE, uncomment the next line
 		    //earthquakesURL = "2.5_week.atom";
 		}
@@ -124,6 +125,7 @@ public class EarthquakeCityMap extends PApplet {
 	    map.addMarkers(quakeMarkers);
 	    map.addMarkers(cityMarkers);
 	    
+//	    sortAndPrint(20);
 	    
 	}  // End setup
 	
@@ -136,8 +138,38 @@ public class EarthquakeCityMap extends PApplet {
 	}
 	
 	
-	// TODO: Add the method:
-	//   private void sortAndPrint(int numToPrint)
+	/*
+	 * This method will create a new array from the list of earthquake markers 
+	 * (hint: there is a method in the List interface named toArray() which 
+	 * returns the elements in the List as an array of Objects). Then it will
+	 * sort the array of earthquake markers in reverse order of their magnitude
+	 * (highest to lowest) and then print out the top numToPrint earthquakes. 
+	 * If numToPrint is larger than the number of markers in quakeMarkers, it 
+	 * should print out all of the earthquakes and stop, but it should not 
+	 * crash.
+	 * 
+	 * Call this method from setUp() to test it. Example input and output files 
+	 * are provided in the data folder: use test2.atom as the input file, and 
+	 * sortandPrint.test2.out.txt is the expected output for a couple different 
+	 * calls to sortAndPrint.
+	 */
+	private void sortAndPrint(int numToPrint) {
+		quakeMarkers.sort(null);
+		
+		EarthquakeMarker quakes[] = new EarthquakeMarker[quakeMarkers.size()];
+		quakes = quakeMarkers.toArray(quakes);
+		
+		for (int i=0; i<numToPrint; i++) {
+			if(i>quakes.length-1) {
+				return;
+			} else {
+				System.out.println(quakes[i]);
+			}
+		}
+		return;
+	}
+	
+	
 	// and then call that method from setUp
 	
 	/** Event handler that gets called automatically when the 
