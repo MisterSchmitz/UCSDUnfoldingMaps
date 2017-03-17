@@ -163,18 +163,18 @@ public class ParseFeed {
 			
 			// get other fields from csv
 //			point.addProperty("uid", columns[0]);
-			point.addProperty("name", columns[1]);
-			point.putProperty("city", columns[2]);
-			point.putProperty("country", columns[3]);
+			point.addProperty("name", columns[1].replace("\"", ""));
+			point.putProperty("city", columns[2].replace("\"", ""));
+			point.putProperty("country", columns[3].replace("\"", ""));
 			
 			// pretty sure IATA/FAA is used in routes.dat
 			// get airport IATA/FAA code
 			if(!columns[4].equals("")) {
-				point.putProperty("code", columns[4]);
+				point.putProperty("code", columns[4].replace("\"", ""));
 			}
 			// get airport ICAO code if no IATA
 			else if(!columns[5].equals("")) {
-				point.putProperty("code", columns[5]);
+				point.putProperty("code", columns[5].replace("\"", ""));
 			}
 			
 			point.putProperty("altitude", columns[8 + i]);

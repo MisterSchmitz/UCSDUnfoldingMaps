@@ -36,17 +36,18 @@ public class AirportMarker extends CommonMarker {
 
 			String name = getName();
 			String code = getCode();
+			String titleText = name+" ("+code+")";
 			pg.pushStyle();
 			
 			pg.rectMode(PConstants.CORNER);
 			
 			pg.stroke(110);
 			pg.fill(255,255,255);
-			pg.rect(x, y + 15, pg.textWidth(name) +6, 18, 5);
+			pg.rect(x, y + 15, pg.textWidth(titleText) +6, 18, 5);
 			
 			pg.textAlign(PConstants.LEFT, PConstants.TOP);
 			pg.fill(0);
-			pg.text(name, x + 3 , y +18);
+			pg.text(titleText, x + 3 , y +18);
 			
 			
 			pg.popStyle();

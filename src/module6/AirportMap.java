@@ -3,17 +3,15 @@ package module6;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 
 import de.fhpotsdam.unfolding.UnfoldingMap;
 import de.fhpotsdam.unfolding.data.PointFeature;
 import de.fhpotsdam.unfolding.data.ShapeFeature;
+import de.fhpotsdam.unfolding.geo.Location;
 import de.fhpotsdam.unfolding.marker.Marker;
 import de.fhpotsdam.unfolding.marker.SimpleLinesMarker;
-import de.fhpotsdam.unfolding.marker.SimplePointMarker;
 import de.fhpotsdam.unfolding.utils.MapUtils;
-import de.fhpotsdam.unfolding.geo.Location;
 import parsing.ParseFeed;
 import processing.core.PApplet;
 
@@ -31,10 +29,7 @@ public class AirportMap extends PApplet {
 	
 	private CommonMarker lastSelected;
 	private CommonMarker lastClicked;
-	
-	// Only show airports with routes
-	private HashMap<Integer, Location> airportsWithRoutes = new HashMap<Integer, Location>();
-	
+		
 	public void setup() {
 		// setting up PApplet
 		size(800,600, OPENGL);
@@ -48,6 +43,9 @@ public class AirportMap extends PApplet {
 		
 		// hashmap for quicker access when matching with routes
 		HashMap<Integer, Location> airports = new HashMap<Integer, Location>();
+
+		// Only show airports with routes
+		HashMap<Integer, Location> airportsWithRoutes = new HashMap<Integer, Location>();
 		
 		// put airports in hashmap with OpenFlights unique id for key
 		for(PointFeature feature : features) {
@@ -102,7 +100,7 @@ public class AirportMap extends PApplet {
 	public void draw() {
 		background(0);
 		map.draw();
-		
+		displayHeader();
 	}
 	
 	/** Event handler that gets called automatically when the 
@@ -210,6 +208,26 @@ public class AirportMap extends PApplet {
 		for(Marker marker : routeList) {
 			marker.setHidden(true);
 		}
-	}	
-
+	}
+	
+	// helper method to draw Header in GUI
+	private void displayHeader() {
+		fill(255, 250, 240);
+		
+		int xbase = 425;
+		int ybase = 25;
+		
+		fill(255);
+		textAlign(CENTER, CENTER);
+		textSize(24);
+		
+		String headerText = "";
+		if(lastClicked == null)  {
+			headerText = "Click Airport to Find Routes";
+		} else {
+			headerText = "Routes to/from "+((AirportMarker)lastClicked).getName()+" ("+((AirportMarker)lastClicked).getCode()+")";
+		}
+		text(headerText, xbase, ybase);
+		return;
+	}
 }
